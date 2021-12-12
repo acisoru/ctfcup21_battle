@@ -1,0 +1,6 @@
+version: "3.7"
+services:
+        net_greetings:
+                build: .
+                ports:
+                        - "6000:31337"
