@@ -1,0 +1,34 @@
+{% extends "base.jhtml" %}
+
+{% block content %}
+    <h2> Hello, {{ user.username }}, this is your profile </h2>
+
+    Username: {{ user.username }} <br>
+    Are you admin?: {{ user.admin }} <br>
+    Your notes: {% for note in notes %} 
+        {{ note }} <br>
+    {% endfor %}
+    {% if not user.admin %}
+        <form action="{{ url_for('profile_post') }}" method="POST">
+            Note name: <input type="text" name="name" placeholder="name" value="{{ note_name }}"><br>
+            Note text: <input type="textarea" name="text" placeholder="text" value="{{ note_text }}"><br>
+            <button type="submit">Submit</button>
+        </form>
+    {% else %}
+        {% if note_text %}
+            {{ note_text }}
+            <br>
+        {% endif %}
+        <form action="{{ url_for('profile_render') }}" method="POST">
+            Username: <input type="text" name="username" placeholder="user name" value="{{ user_name }}"><br>
+            Note name: <input type="text" name="name" placeholder="name" value="{{ note_name }}"><br>
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

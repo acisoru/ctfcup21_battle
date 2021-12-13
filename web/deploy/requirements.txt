@@ -1,0 +1,14 @@
+starlette==0.14.2
+fastapi==0.68.1
+loguru==0.5.3
+pytest==6.2.5
+Jinja2==3.0.2
+pydantic==1.8.2
+uvicorn==0.15.0
+python-multipart==0.0.5
+python-dotenv==0.19.1
+pytz==2021.1
+aiofiles==0.4.0
+fastapi-sessions==0.3.2
+python-jose
+werkzeug
