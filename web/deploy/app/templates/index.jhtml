@@ -1,0 +1,22 @@
+{% extends "base.jhtml" %}
+
+{% block content %}
+    <h2> Welcome to yet another portal</h2>
+
+    {% if user %}
+        <h3> Hello, {{ user.username }}</h3>
+        <a href="{{ url_for('profile') }}">Profile</a><br>
+        {# {% if user.admin %}
+            <a href="{{ url_for('admin') }}">Admin area</a><br>
+        {% endif %} #}
+        <a href="{{ url_for('logout') }}">Logout</a><br>
+    {% else %}
+        <a href="{{ url_for('login') }}">Login</a><br>
+        <a href="{{ url_for('register') }}">Register</a><br>
+    {% endif %}
+    {# <a href="{{ url_for('view_login') }}">Login</a><br> #}
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

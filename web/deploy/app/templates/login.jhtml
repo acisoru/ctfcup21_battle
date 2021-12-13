@@ -1,0 +1,15 @@
+{% extends "base.jhtml" %}
+
+{% block content %}
+    <h2> Login: </h2>
+    <form action="{{ url_for('login_post') }}" method="POST">
+        Login: <input type="text" name="login" placeholder="login" value="{{ login }}"><br>
+        Password: <input type="password" name="password" placeholder="password" value="{{ password }}"><br>
+        <button type="submit">Submit</button>
+    </form>
+    <!-- note: delete /old_login page, since this invented -->
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}

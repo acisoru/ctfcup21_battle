@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports: 
+      - "3200:80"
+    environment:
+      - "NOTES_SAVE_BASE_PATH=/tmp/also_totally_ungessable_path_only_env"
+    volumes:
+      - "./flag.txt:/v3ry_l0ng_4nd_ungessable_nam3_du3_t0_that_you_need_RCE.txt:ro"

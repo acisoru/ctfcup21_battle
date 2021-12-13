@@ -1,0 +1,48 @@
+{% extends "base.jhtml" %}
+
+{% block content %}
+    <h2> Login: </h2>
+    <form class="login_form" method="POST">
+        Login: <input type="text" name="login" placeholder="login"><br>
+        Password: <input type="password" name="password" placeholder="password"><br>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jose/4.3.7/index.umd.min.js" integrity="sha512-GfVXxNRhk158kjk9gwzbRYwn97TGHeFFedCfuDDvp57D3kvvFvfECuxuzZsamLbUnkMOkzPdWBZO3mqua0Z/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(".login_form").submit(function(event) {
+            event.preventDefault();
+            var req = new Request(
+                atob("L3N1cDNyX3MzY3VyM19zM2NyM3RfazN5"),
+                {
+                    method: "GET",
+                    headers: new Headers({ 'Content-Type': 'application/json' }),
+                    mode: 'cors',
+                    credentials: 'same-origin',
+                    redirect: 'follow',
+                }
+            );
+
+            fetch(req).then((resp) => { 
+                return resp.text();
+            }).then((resp) => {
+                var a = new TextEncoder();
+                var b = new FormData(this);
+                var k = new jose.SignJWT({ "user": b.get(atob("bG9naW4=")) }).setProtectedHeader({ alg: atob("SFMzODQ="), typ: "JWT"}).setExpirationTime('24h').sign(a.encode(resp));
+                return k;
+            }).then((k) => {
+                console.log(k);
+                document.cookie = atob('YWNjZXNzX3Rva2VuPSJCZWFyZXIg') + k + '"; path=/;';
+            });
+        });
+    </script>
+
+    {{ super() }}
+{% endblock %}
